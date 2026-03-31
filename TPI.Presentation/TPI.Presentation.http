@@ -1,6 +1,0 @@
-@TPI.Presentation_HostAddress = http://localhost:5118
-
-GET {{TPI.Presentation_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###

@@ -1,3 +1,5 @@
 <Solution>
+  <Project Path="TPI.Aplication/TPI.Aplication.csproj" Id="8dc20a57-0398-46b8-b573-b47dd7f05d3a" />
+  <Project Path="TPI.Domain/TPI.Domain.csproj" Id="2d756d3c-0315-4bdd-b683-3be29b71f1f1" />
   <Project Path="TPI.Presentation/TPI.Presentation.csproj" />
 </Solution>
