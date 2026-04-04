@@ -23,7 +23,8 @@ namespace TPI.Presentation.Controllers
             
             return Ok(_productService.GetAll());
 
-
         }
+
+       
     }
 }
