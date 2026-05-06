@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using TPI.Aplication.Abstractions;
+using TPI.Aplication.Requests;
+using TPI.Aplication.Responses;
 using TPI.Domain.Entities;
 
 namespace TPI.Presentation.Controllers
@@ -18,13 +20,33 @@ namespace TPI.Presentation.Controllers
 
 
         [HttpGet]
-        public ActionResult <Product> GetAll ()
+        public ActionResult <ProductResponse> GetAll ()
         {
             
             return Ok(_productService.GetAll());
 
         }
 
-       
-    }
+
+
+        [HttpGet("{id}")]
+        public ActionResult<ProductResponse> GetById(Guid id)
+        {
+            var product = _productService.GetById(id);
+            if (product == null)
+            {
+                return NotFound();
+            }
+            return Ok(product);
+        }
+
+
+
+        [HttpPost]
+        public ActionResult<ProductResponse> Create(ProductRequests product)
+        {
+            var createdProduct = _productService.Create(product);
+            return CreatedAtAction(nameof(GetById), new { id = createdProduct.Id }, createdProduct); //nameof es el nombre del metodo que se va a llamar para obtener el producto creado
+        }
+}
 }
