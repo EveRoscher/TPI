@@ -1,14 +1,15 @@
-﻿using TPI.Domain.Entities;
+﻿using TPI.Aplication.Requests;
+using TPI.Aplication.Responses;
+using TPI.Domain.Entities;
 
 namespace TPI.Aplication.Abstractions
 {
     public interface IProductService
     {
-        List<Product> getAll();
-        Product getById(Guid id);
-        Product create(Product product);
-        Product update(Product product);
-        bool delete(Product product);
-        object? GetAll();
+        List<ProductResponse> GetAll();
+        ProductResponse? GetById(Guid id);
+        ProductResponse Create(ProductRequests product);
+        Product Update(Product product);
+        bool Delete(Guid id);
     }
 }

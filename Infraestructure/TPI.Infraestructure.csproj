@@ -7,7 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\TPI.Domain\TPI.Domain.csproj" />
+    <ProjectReference Include="..\TPI.Aplication\TPI.Aplication.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Persistance\" />
   </ItemGroup>
 
 </Project>

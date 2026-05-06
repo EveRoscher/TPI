@@ -1,40 +1,78 @@
 ﻿using TPI.Aplication.Abstractions;
+using TPI.Aplication.Requests;
+using TPI.Aplication.Responses;
 using TPI.Domain.Entities;
 namespace TPI.Aplication.Services
 
 {
-    public class ProductService : IProductService 
+    public class ProductService : IProductService
 
     {
-        public List<Product> getAll()
-        {
-            throw new NotImplementedException();
-        }
-       
-        public Product getById(Guid id)
-        {
-            throw new NotImplementedException();
+        private static readonly List<Product> _products = new();
+
+  
+
+        public List<ProductResponse> GetAll()
+        { 
+        return _products
+       .OrderBy(x => x.Price)
+       .Select(x => new ProductResponse
+       {
+           Id = x.Id,
+           Name = x.Name,
+           Description = x.Description,
+           Price = x.Price
+       })
+       .ToList();
         }
 
-        public Product create(Product product)
+        public ProductResponse? GetById(Guid id)
         {
-            throw new NotImplementedException();
+            return _products
+       .Select(x => new ProductResponse
+       {
+           Id = x.Id,
+           Name = x.Name,
+           Description = x.Description,
+           Price = x.Price
+       })
+       .FirstOrDefault();
+        }
+         
+        public ProductResponse Create(ProductRequests product)
+        {
+            var newProduct = new Product
+            {
+                Id = Guid.NewGuid(),
+                Name = product.Name,
+                Description = product.Description,
+                Price = product.Price
+            };
+                        _products.Add(newProduct);
+
+
+                        return new ProductResponse
+
+                        {
+                            Id = newProduct.Id,
+                            Name = newProduct.Name,
+                            Description = newProduct.Description,
+                            Price = newProduct.Price
+                        };
         }   
 
-        public Product update(Product product)
+        public Product Update(Product product)
         {
             throw new NotImplementedException();
         }
 
-        public bool delete(Product product)
-        {
-            throw new NotImplementedException();    
-        }
-
-        public object? GetAll()
+      
+        public bool Delete(Guid id)
         {
             throw new NotImplementedException();
         }
+
+        
     }
 }
 
