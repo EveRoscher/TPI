@@ -9,7 +9,8 @@ namespace TPI.Aplication.Abstractions
         List<ProductResponse> GetAll();
         ProductResponse? GetById(Guid id);
         ProductResponse Create(ProductRequests product);
-        Product Update(Product product);
+        bool Update(ProductRequests product, Guid id);
         bool Delete(Guid id);
+        void Update(ProductResponse productToUpdate);
     }
 }

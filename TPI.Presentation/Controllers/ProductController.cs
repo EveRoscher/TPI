@@ -12,7 +12,7 @@ namespace TPI.Presentation.Controllers
     {
         private readonly IProductService _productService; //inyeccion de dependencias
 
-            
+
         public ProductController(IProductService productService) //creacion del constructor 
         {
             _productService = productService;
@@ -20,17 +20,20 @@ namespace TPI.Presentation.Controllers
 
 
         [HttpGet]
-        public ActionResult <ProductResponse> GetAll ()
+        public ActionResult<ProductResponse> GetAll()
         {
-            
-            return Ok(_productService.GetAll());
+            var products = _productService.GetAll();
 
+            if (!products.Any())
+                return NotFound();
+
+            return Ok(products);
         }
 
 
 
         [HttpGet("{id}")]
-        public ActionResult<ProductResponse> GetById(Guid id)
+        public ActionResult<ProductResponse> GetById([FromRoute] Guid id)
         {
             var product = _productService.GetById(id);
             if (product == null)
@@ -43,10 +46,40 @@ namespace TPI.Presentation.Controllers
 
 
         [HttpPost]
-        public ActionResult<ProductResponse> Create(ProductRequests product)
+        public ActionResult<ProductResponse> Create([FromBody] ProductRequests product)
         {
             var createdProduct = _productService.Create(product);
             return CreatedAtAction(nameof(GetById), new { id = createdProduct.Id }, createdProduct); //nameof es el nombre del metodo que se va a llamar para obtener el producto creado
         }
-}
+
+
+
+
+
+        [HttpDelete("{id}")]
+        public ActionResult Delete([FromRoute] Guid id) 
+        {
+            var deleted = _productService.Delete(id);
+
+            if (!deleted)
+                return NotFound();
+
+            return NoContent();
+        }
+
+
+        [HttpPut("{id}")]
+        public ActionResult Update([FromBody] ProductRequests product, [FromRoute] Guid id)
+        
+        {
+            var updatedProduct = _productService.Update(product, id);
+
+            if (!updatedProduct)
+                return NotFound();
+
+            return NoContent();
+        }
+
+
+    }
 }
