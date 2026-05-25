@@ -11,6 +11,14 @@ namespace TPI.Aplication.Services
 {
     public class ProductService : IProductService
     {
+        //private readonly IProductService _productService;
+
+        //public ProductService(IProductService productService) 
+        //{ 
+        //    _productService = productService;
+        //}
+
+
         private readonly List<Product> _products = new();
 
         public ProductService()

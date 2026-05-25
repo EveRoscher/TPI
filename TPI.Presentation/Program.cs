@@ -1,11 +1,16 @@
+using Microsoft.EntityFrameworkCore;
 using TPI.Aplication.Abstractions;
 using TPI.Aplication.Services;
+using TPI.Infraestructure.Persistance;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddDbContext <TPIDbContext> (
+    options => options.UseSqlServer (builder.Configuration.GetConnectionString("TPIConnectionString")));
 
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IUserService, UserService>();
