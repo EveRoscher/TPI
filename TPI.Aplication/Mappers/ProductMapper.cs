@@ -20,7 +20,7 @@ namespace TPI.Aplication.Mappers
             };
         }
 
-        public static Product ToProduct(this ProductRequests productRequest)
+        public static Product ToProduct(this ProductRequest productRequest)
         {
             return new Product
             {

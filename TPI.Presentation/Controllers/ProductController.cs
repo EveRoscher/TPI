@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using TPI.Aplication.Abstractions;
+using TPI.Aplication.Exceptions;
 using TPI.Aplication.Requests;
 using TPI.Aplication.Responses;
 using TPI.Domain.Entities;
@@ -22,12 +23,23 @@ namespace TPI.Presentation.Controllers
         [HttpGet]
         public ActionResult<ProductResponse> GetAll()
         {
-            var products = _productService.GetAll();
+            try
+            {
+                var products = _productService.GetAll();
 
-            if (!products.Any())
-                return NotFound();
+                if (!products.Any())
+                    return NotFound("No hay productos registrados.");
 
-            return Ok(products);
+                return Ok(products);
+            }
+            catch (DatabaseException ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Ocurrió un error inesperado.");
+            }
         }
 
 
@@ -35,21 +47,42 @@ namespace TPI.Presentation.Controllers
         [HttpGet("{id}")]
         public ActionResult<ProductResponse> GetById([FromRoute] Guid id)
         {
-            var product = _productService.GetById(id);
-            if (product == null)
+            try
             {
-                return NotFound();
+                return Ok(_productService.GetById(id));
             }
-            return Ok(product);
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (DatabaseException ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Ocurrió un error inesperado.");
+            }
         }
 
 
 
         [HttpPost]
-        public ActionResult<ProductResponse> Create([FromBody] ProductRequests product)
+        public ActionResult<ProductResponse> Create([FromBody] ProductRequest product)
         {
-            var createdProduct = _productService.Create(product);
-            return CreatedAtAction(nameof(GetById), new { id = createdProduct.Id }, createdProduct); //nameof es el nombre del metodo que se va a llamar para obtener el producto creado
+            try
+            {
+                var createdProduct = _productService.Create(product);
+                return CreatedAtAction(nameof(GetById), new { id = createdProduct.Id }, createdProduct);
+            }
+            catch (DatabaseException ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Ocurrió un error inesperado.");
+            }
         }
 
 
@@ -59,25 +92,47 @@ namespace TPI.Presentation.Controllers
         [HttpDelete("{id}")]
         public ActionResult Delete([FromRoute] Guid id) 
         {
-            var deleted = _productService.Delete(id);
-
-            if (!deleted)
-                return NotFound();
-
-            return NoContent();
+            try
+            {
+                _productService.Delete(id);
+                return NoContent();
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (DatabaseException ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Ocurrió un error inesperado.");
+            }
         }
 
 
         [HttpPut("{id}")]
-        public ActionResult Update([FromBody] ProductRequests product, [FromRoute] Guid id)
+        public ActionResult Update([FromBody] ProductRequest product, [FromRoute] Guid id)
         
         {
-            var updatedProduct = _productService.Update(product, id);
-
-            if (!updatedProduct)
-                return NotFound();
-
-            return NoContent();
+            try
+            {
+                _productService.Update(product, id);
+                return NoContent();
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (DatabaseException ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Ocurrió un error inesperado.");
+            }
         }
 
 

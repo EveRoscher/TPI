@@ -1,7 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using TPI.Aplication.Abstractions;
+using TPI.Aplication.Abstractions.Infraestructure;
 using TPI.Aplication.Services;
 using TPI.Infraestructure.Persistance;
+using TPI.Infraestructure.Persistance.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +14,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext <TPIDbContext> (
     options => options.UseSqlServer (builder.Configuration.GetConnectionString("TPIConnectionString")));
 
+builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IProductCategoryService, ProductCategoryService>();

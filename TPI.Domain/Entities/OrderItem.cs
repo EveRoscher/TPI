@@ -1,6 +1,6 @@
 ﻿namespace TPI.Domain.Entities
 {
-    public class OrderItem
+    public class OrderItem : BaseEntity
     {
         public Guid Id { get; set; }
         public string NameProduct { get; set; } = string.Empty;

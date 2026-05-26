@@ -1,6 +1,6 @@
 ﻿namespace TPI.Domain.Entities
 {
-    public class User
+    public class User : BaseEntity
     {
         //atributos
         public Guid Id { get; set; }
