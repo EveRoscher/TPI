@@ -8,7 +8,7 @@ namespace TPI.Infraestructure.Persistance
 {
     public class TPIDbContext : DbContext
     {
-        public DbSet<Product> Products { get; set; }
+        public DbSet<Product> Products { get; set; } //agregar tablas 
 
         public TPIDbContext(DbContextOptions<TPIDbContext> options) : base(options) 
         { 
@@ -21,7 +21,8 @@ namespace TPI.Infraestructure.Persistance
         modelBuilder.Entity<User>().UseTpcMappingStrategy();
 
             modelBuilder.Entity<Product>();
-    }
+
+        }
 
 }
 }
