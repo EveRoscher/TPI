@@ -6,11 +6,11 @@ namespace TPI.Aplication.Abstractions
 {
     public interface IProductService
     {
-        List<ProductResponse> GetAll();
-        ProductResponse GetById(Guid id);
-        ProductResponse Create(ProductRequest product);
-        void Update(ProductRequest product, Guid id);
-        void Delete(Guid id);
+        Task<List<ProductResponse>> GetAllAsync();
+        Task<ProductResponse> GetByIdAsync(Guid id);
+        Task<ProductResponse> CreateAsync(ProductRequest product);
+        Task UpdateAsync(ProductRequest product, Guid id);
+        Task DeleteAsync(Guid id);
     }
 }
 

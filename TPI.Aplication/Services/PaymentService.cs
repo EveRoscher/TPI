@@ -1,39 +1,68 @@
 ﻿using TPI.Aplication.Abstractions;
-using TPI.Domain.Entities;
+using TPI.Aplication.Abstractions.Infraestructure;
+using TPI.Aplication.Exceptions;
+using TPI.Aplication.Mappers;
+using TPI.Aplication.Requests;
+using TPI.Aplication.Responses;
 
 namespace TPI.Aplication.Services
 {
     public class PaymentService : IPaymentService
-
     {
-        public Payment create(Payment payment)
+        private readonly IPaymentRepository _paymentRepository;
+
+        public PaymentService(IPaymentRepository paymentRepository)
         {
-            throw new NotImplementedException();
+            _paymentRepository = paymentRepository;
         }
 
-        public bool delete(Payment payment)
+        public async Task<List<PaymentResponse>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return (await _paymentRepository.GetAllAsync())
+                .OrderByDescending(x => x.ReceivedAt)
+                .Select(x => x.ToPaymentResponse())
+                .ToList();
         }
 
-        public List<Payment> getAll()
+        public async Task<PaymentResponse> GetByIdAsync(Guid id)
         {
-            throw new NotImplementedException();
+            var payment = await _paymentRepository.GetByIdAsync(id);
+
+            if (payment == null)
+                throw new NotFoundException($"No se encontró un pago con id '{id}'.");
+
+            return payment.ToPaymentResponse();
         }
 
-        public object? GetAll()
+        public async Task<PaymentResponse> CreateAsync(PaymentRequest request)
         {
-            throw new NotImplementedException();
+            var newPayment = request.ToPayment();
+            await _paymentRepository.AddAsync(newPayment);
+            return newPayment.ToPaymentResponse();
         }
 
-        public Payment getById(Guid id)
+        public async Task UpdateAsync(PaymentRequest request, Guid id)
         {
-            throw new NotImplementedException();
+            var payment = await _paymentRepository.GetByIdAsync(id);
+
+            if (payment == null)
+                throw new NotFoundException($"No se encontró un pago con id '{id}'.");
+
+            payment.Method = request.Method;
+            payment.Amount = request.Amount;
+            payment.ReceiptUrl = request.ReceiptUrl;
+
+            await _paymentRepository.UpdateAsync(payment);
         }
 
-        public Payment update(Payment payment)
+        public async Task DeleteAsync(Guid id)
         {
-            throw new NotImplementedException();
+            var payment = await _paymentRepository.GetByIdAsync(id);
+
+            if (payment == null)
+                throw new NotFoundException($"No se encontró un pago con id '{id}'.");
+
+            await _paymentRepository.DeleteAsync(id);
         }
     }
 }

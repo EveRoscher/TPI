@@ -1,38 +1,72 @@
 ﻿using TPI.Aplication.Abstractions;
-using TPI.Domain.Entities;
+using TPI.Aplication.Abstractions.Infraestructure;
+using TPI.Aplication.Exceptions;
+using TPI.Aplication.Mappers;
+using TPI.Aplication.Requests;
+using TPI.Aplication.Responses;
 
 namespace TPI.Aplication.Services
 {
     public class OrderItemService : IOrderItemService
     {
-        public OrderItem create(OrderItem orderItem)
+        private readonly IOrderItemRepository _orderItemRepository;
+        private readonly IProductRepository _productRepository;
+
+        public OrderItemService(IOrderItemRepository orderItemRepository, IProductRepository productRepository)
         {
-            throw new NotImplementedException();
+            _orderItemRepository = orderItemRepository;
+            _productRepository = productRepository;
         }
 
-        public OrderItem delete(OrderItem orderItem)
+        public async Task<List<OrderItemResponse>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return (await _orderItemRepository.GetAllAsync())
+                .Select(x => x.ToOrderItemResponse())
+                .ToList();
         }
 
-        public List<OrderItem> getAll()
+        public async Task<OrderItemResponse> GetByIdAsync(Guid id)
         {
-            throw new NotImplementedException();
+            var item = await _orderItemRepository.GetByIdAsync(id);
+
+            if (item == null)
+                throw new NotFoundException($"No se encontró el item con id '{id}'.");
+
+            return item.ToOrderItemResponse();
         }
 
-        public object? GetAll()
+        public async Task<OrderItemResponse> CreateAsync(OrderItemRequest request)
         {
-            throw new NotImplementedException();
+            var product = await _productRepository.GetByIdAsync(request.ProductId);
+
+            if (product == null)
+                throw new NotFoundException($"No se encontró un producto con id '{request.ProductId}'.");
+
+            var newItem = request.ToOrderItem(product);
+            await _orderItemRepository.AddAsync(newItem);
+            return newItem.ToOrderItemResponse();
         }
 
-        public OrderItem getById(Guid id)
+        public async Task UpdateAsync(OrderItemRequest request, Guid id)
         {
-            throw new NotImplementedException();
+            var item = await _orderItemRepository.GetByIdAsync(id);
+
+            if (item == null)
+                throw new NotFoundException($"No se encontró el item con id '{id}'.");
+
+            item.Quantity = request.Quantity;
+
+            await _orderItemRepository.UpdateAsync(item);
         }
 
-        public OrderItem update(OrderItem orderItem)
+        public async Task DeleteAsync(Guid id)
         {
-            throw new NotImplementedException();
+            var item = await _orderItemRepository.GetByIdAsync(id);
+
+            if (item == null)
+                throw new NotFoundException($"No se encontró el item con id '{id}'.");
+
+            await _orderItemRepository.DeleteAsync(id);
         }
     }
 }

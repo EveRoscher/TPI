@@ -1,38 +1,68 @@
 ﻿using TPI.Aplication.Abstractions;
-using TPI.Domain.Entities;
+using TPI.Aplication.Abstractions.Infraestructure;
+using TPI.Aplication.Exceptions;
+using TPI.Aplication.Mappers;
+using TPI.Aplication.Requests;
+using TPI.Aplication.Responses;
 
 namespace TPI.Aplication.Services
 {
     public class OrderService : IOrderService
     {
-        public Order create(Order order)
+        private readonly IOrderRepository _orderRepository;
+
+        public OrderService(IOrderRepository orderRepository)
         {
-            throw new NotImplementedException();
+            _orderRepository = orderRepository;
         }
 
-        public Order delete(Order order)
+        public async Task<List<OrderResponse>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return (await _orderRepository.GetAllAsync())
+                .OrderByDescending(x => x.CreatedAt)
+                .Select(x => x.ToOrderResponse())
+                .ToList();
         }
 
-        public List<Order> getAll()
+        public async Task<OrderResponse> GetByIdAsync(Guid id)
         {
-            throw new NotImplementedException();
+            var order = await _orderRepository.GetByIdAsync(id);
+
+            if (order == null)
+                throw new NotFoundException($"No se encontró una orden con id '{id}'.");
+
+            return order.ToOrderResponse();
         }
 
-        public object? GetAll()
+        public async Task<OrderResponse> CreateAsync(OrderRequest request)
         {
-            throw new NotImplementedException();
+            var newOrder = request.ToOrder();
+            await _orderRepository.AddAsync(newOrder);
+            return newOrder.ToOrderResponse();
         }
 
-        public Order getById(Guid id)
+        public async Task UpdateAsync(OrderRequest request, Guid id)
         {
-            throw new NotImplementedException();
+            var order = await _orderRepository.GetByIdAsync(id);
+
+            if (order == null)
+                throw new NotFoundException($"No se encontró una orden con id '{id}'.");
+
+            order.PickupETA = request.PickupETA;
+            order.PickupDay = request.PickupDay;
+            order.UserId = request.UserId;
+
+            await _orderRepository.UpdateAsync(order);
         }
 
-        public Order update(Order order)
+        public async Task DeleteAsync(Guid id)
         {
-            throw new NotImplementedException();
+            var order = await _orderRepository.GetByIdAsync(id);
+
+            if (order == null)
+                throw new NotFoundException($"No se encontró una orden con id '{id}'.");
+
+            await _orderRepository.DeleteAsync(id);
         }
     }
 }

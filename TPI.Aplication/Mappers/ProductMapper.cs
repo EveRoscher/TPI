@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using TPI.Aplication.Requests;
+﻿using TPI.Aplication.Requests;
 using TPI.Aplication.Responses;
 using TPI.Domain.Entities;
 
@@ -16,7 +13,10 @@ namespace TPI.Aplication.Mappers
                 Id = product.Id,
                 Name = product.Name,
                 Description = product.Description,
-                Price = product.Price
+                Price = product.Price,
+                IsActive = product.IsActive,
+                ImageUrl = product.ImageUrl,
+                ProductCategoryId = product.ProductCategoryId
             };
         }
 
@@ -27,7 +27,12 @@ namespace TPI.Aplication.Mappers
                 Id = Guid.NewGuid(),
                 Name = productRequest.Name,
                 Description = productRequest.Description,
-                Price = productRequest.Price
+                Price = productRequest.Price,
+                IsActive = productRequest.IsActive,
+                ImageUrl = productRequest.ImageUrl,
+                ProductCategoryId = productRequest.ProductCategoryId,
+                CreatedAt = DateTime.UtcNow,
+                UpdatedDateTime = DateTime.UtcNow
             };
         }
     }

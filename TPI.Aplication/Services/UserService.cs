@@ -1,38 +1,68 @@
 ﻿using TPI.Aplication.Abstractions;
-using TPI.Domain.Entities;
+using TPI.Aplication.Abstractions.Infraestructure;
+using TPI.Aplication.Exceptions;
+using TPI.Aplication.Mappers;
+using TPI.Aplication.Requests;
+using TPI.Aplication.Responses;
+
 namespace TPI.Aplication.Services
 {
     public class UserService : IUserService
-
     {
-        public User create(User user)
+        private readonly IUserRepository _userRepository;
+
+        public UserService(IUserRepository userRepository)
         {
-            throw new NotImplementedException();
+            _userRepository = userRepository;
         }
 
-        public bool delete(User user)
+        public async Task<List<UserResponse>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return (await _userRepository.GetAllAsync())
+                .Select(x => x.ToUserResponse())
+                .ToList();
         }
 
-        public List<User> getAll()
+        public async Task<UserResponse> GetByIdAsync(Guid id)
         {
-            throw new NotImplementedException();
+            var user = await _userRepository.GetByIdAsync(id);
+
+            if (user == null)
+                throw new NotFoundException($"No se encontró un usuario con id '{id}'.");
+
+            return user.ToUserResponse();
         }
 
-        public object? GetAll()
+        public async Task<UserResponse> CreateAsync(UserRequest request)
         {
-            throw new NotImplementedException();
+            var newUser = request.ToUser();
+            await _userRepository.AddAsync(newUser);
+            return newUser.ToUserResponse();
         }
 
-        public User getById(Guid id)
+        public async Task UpdateAsync(UserRequest request, Guid id)
         {
-            throw new NotImplementedException();
+            var user = await _userRepository.GetByIdAsync(id);
+
+            if (user == null)
+                throw new NotFoundException($"No se encontró un usuario con id '{id}'.");
+
+            user.Name = request.Name;
+            user.Email = request.Email;
+            user.Phone = request.Phone;
+            user.Role = request.Role;
+
+            await _userRepository.UpdateAsync(user);
         }
 
-        public User update(User user)
+        public async Task DeleteAsync(Guid id)
         {
-            throw new NotImplementedException();
+            var user = await _userRepository.GetByIdAsync(id);
+
+            if (user == null)
+                throw new NotFoundException($"No se encontró un usuario con id '{id}'.");
+
+            await _userRepository.DeleteAsync(id);
         }
     }
 }

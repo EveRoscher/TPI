@@ -4,12 +4,12 @@ using System.Text;
 
 namespace TPI.Aplication.Abstractions.Infraestructure
 {
-    public interface IBaseRepository <T> where T : class
+    public interface IBaseRepository<T> where T : class
     {
-        List<T> GetAll();
-        T? GetById(Guid id);
-        T Add(T entity);
-        void Update(T entity);
-        void Delete(Guid id);
+        Task<List<T>> GetAllAsync();
+        Task<T?> GetByIdAsync(Guid id);
+        Task<T> AddAsync(T entity);
+        Task UpdateAsync(T entity);
+        Task DeleteAsync(Guid id);
     }
 }

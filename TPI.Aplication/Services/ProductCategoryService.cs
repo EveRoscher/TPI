@@ -1,39 +1,67 @@
 ﻿using TPI.Aplication.Abstractions;
-using TPI.Domain.Entities;
-
+using TPI.Aplication.Abstractions.Infraestructure;
+using TPI.Aplication.Exceptions;
+using TPI.Aplication.Mappers;
+using TPI.Aplication.Requests;
+using TPI.Aplication.Responses;
 
 namespace TPI.Aplication.Services
 {
     public class ProductCategoryService : IProductCategoryService
     {
-        public ProductCategory create(ProductCategory productCategory)
+        private readonly IProductCategoryRepository _productCategoryRepository;
+
+        public ProductCategoryService(IProductCategoryRepository productCategoryRepository)
         {
-            throw new NotImplementedException();
+            _productCategoryRepository = productCategoryRepository;
         }
 
-        public bool delete(ProductCategory productCategory)
+        public async Task<List<ProductCategoryResponse>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return (await _productCategoryRepository.GetAllAsync())
+                .OrderBy(x => x.Name)
+                .Select(x => x.ToProductCategoryResponse())
+                .ToList();
         }
 
-        public List<ProductCategory> getAll()
+        public async Task<ProductCategoryResponse> GetByIdAsync(Guid id)
         {
-            throw new NotImplementedException();
+            var category = await _productCategoryRepository.GetByIdAsync(id);
+
+            if (category == null)
+                throw new NotFoundException($"No se encontró una categoría con id '{id}'.");
+
+            return category.ToProductCategoryResponse();
         }
 
-        public object? GetAll()
+        public async Task<ProductCategoryResponse> CreateAsync(ProductCategoryRequest request)
         {
-            throw new NotImplementedException();
+            var newCategory = request.ToProductCategory();
+            await _productCategoryRepository.AddAsync(newCategory);
+            return newCategory.ToProductCategoryResponse();
         }
 
-        public ProductCategory getById(Guid id)
+        public async Task UpdateAsync(ProductCategoryRequest request, Guid id)
         {
-            throw new NotImplementedException();
+            var category = await _productCategoryRepository.GetByIdAsync(id);
+
+            if (category == null)
+                throw new NotFoundException($"No se encontró una categoría con id '{id}'.");
+
+            category.Name = request.Name;
+            category.Description = request.Description;
+
+            await _productCategoryRepository.UpdateAsync(category);
         }
 
-        public ProductCategory update(ProductCategory productCategory)
+        public async Task DeleteAsync(Guid id)
         {
-            throw new NotImplementedException();
+            var category = await _productCategoryRepository.GetByIdAsync(id);
+
+            if (category == null)
+                throw new NotFoundException($"No se encontró una categoría con id '{id}'.");
+
+            await _productCategoryRepository.DeleteAsync(id);
         }
     }
 }

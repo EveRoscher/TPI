@@ -11,7 +11,7 @@ using TPI.Aplication.Exceptions;
 
 namespace TPI.Aplication.Services
 {
-    public class ProductService : IProductService 
+    public class ProductService : IProductService
     {
 
         private readonly IProductRepository _productRepository;
@@ -21,18 +21,17 @@ namespace TPI.Aplication.Services
             _productRepository = productRepository;
         }
 
-        public List<ProductResponse> GetAll()
+        public async Task<List<ProductResponse>> GetAllAsync()
         {
-            return _productRepository
-                .GetAll()
+            return (await _productRepository.GetAllAsync())
                 .OrderBy(x => x.Price)
                 .Select(x => x.ToProductResponse())
                 .ToList();
         }
 
-        public ProductResponse GetById(Guid id)
+        public async Task<ProductResponse> GetByIdAsync(Guid id)
         {
-            var product = _productRepository.GetById(id);
+            var product = await _productRepository.GetByIdAsync(id);
 
             if (product == null)
                 throw new NotFoundException($"No se encontró un producto con id '{id}'.");
@@ -40,27 +39,27 @@ namespace TPI.Aplication.Services
             return product.ToProductResponse();
         }
 
-        public ProductResponse Create(ProductRequest product)
+        public async Task<ProductResponse> CreateAsync(ProductRequest product)
         {
             var newProduct = product.ToProduct();
-            _productRepository.Add(newProduct);
+            await _productRepository.AddAsync(newProduct);
             return newProduct.ToProductResponse();
         }
 
-    
-        public void Delete(Guid id)
+
+        public async Task DeleteAsync(Guid id)
         {
-            var product = _productRepository.GetById(id);
+            var product = await _productRepository.GetByIdAsync(id);
 
             if (product == null)
                 throw new NotFoundException($"No se encontró un producto con id '{id}'.");
 
-            _productRepository.Delete(id);
+            await _productRepository.DeleteAsync(id);
         }
 
-        public void Update(ProductRequest product, Guid id)
+        public async Task UpdateAsync(ProductRequest product, Guid id)
         {
-            var productToUpdate = _productRepository.GetById(id);
+            var productToUpdate = await _productRepository.GetByIdAsync(id);
 
             if (productToUpdate == null)
                 throw new NotFoundException($"No se encontró un producto con id '{id}'.");
@@ -68,14 +67,13 @@ namespace TPI.Aplication.Services
             productToUpdate.Name = product.Name;
             productToUpdate.Description = product.Description;
             productToUpdate.Price = product.Price;
+            productToUpdate.IsActive = product.IsActive;
+            productToUpdate.ImageUrl = product.ImageUrl;
+            productToUpdate.ProductCategoryId = product.ProductCategoryId;
 
-            _productRepository.Update(productToUpdate);
+            await _productRepository.UpdateAsync(productToUpdate);
         }
 
-        
+
     }
 }
-
-
-
-

@@ -1,17 +1,14 @@
-﻿using TPI.Domain.Entities;
+﻿using TPI.Aplication.Requests;
+using TPI.Aplication.Responses;
 
 namespace TPI.Aplication.Abstractions
 {
     public interface IProductCategoryService
     {
-        List<ProductCategory> getAll();
-        ProductCategory getById(Guid id);
-        ProductCategory create(ProductCategory productCategory);
-        ProductCategory update(ProductCategory productCategory);
-        bool delete(ProductCategory productCategory);
-        object? GetAll();
+        Task<List<ProductCategoryResponse>> GetAllAsync();
+        Task<ProductCategoryResponse> GetByIdAsync(Guid id);
+        Task<ProductCategoryResponse> CreateAsync(ProductCategoryRequest productCategory);
+        Task UpdateAsync(ProductCategoryRequest productCategory, Guid id);
+        Task DeleteAsync(Guid id);
     }
 }
-
-
-

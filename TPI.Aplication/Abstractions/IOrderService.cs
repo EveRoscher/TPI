@@ -1,16 +1,14 @@
-﻿using TPI.Domain.Entities;
+﻿using TPI.Aplication.Requests;
+using TPI.Aplication.Responses;
 
 namespace TPI.Aplication.Abstractions
 {
     public interface IOrderService
     {
-        List<Order> getAll();
-        Order getById(Guid id);
-        Order create(Order order);
-        Order update(Order order);
-        Order delete(Order order);
-        object? GetAll();
-
+        Task<List<OrderResponse>> GetAllAsync();
+        Task<OrderResponse> GetByIdAsync(Guid id);
+        Task<OrderResponse> CreateAsync(OrderRequest order);
+        Task UpdateAsync(OrderRequest order, Guid id);
+        Task DeleteAsync(Guid id);
     }
 }
-

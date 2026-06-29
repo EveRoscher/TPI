@@ -1,12 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using TPI.Aplication.Abstractions;
-using TPI.Aplication.Exceptions;
+﻿using TPI.Aplication.Abstractions;
 using TPI.Aplication.Requests;
 using TPI.Aplication.Responses;
-using TPI.Domain.Entities;
+using TPI.Presentation.Authorization;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace TPI.Presentation.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class ProductController : ControllerBase
@@ -21,118 +22,52 @@ namespace TPI.Presentation.Controllers
 
 
         [HttpGet]
-        public ActionResult<ProductResponse> GetAll()
+        public async Task<ActionResult<List<ProductResponse>>> GetAllAsync()
         {
-            try
-            {
-                var products = _productService.GetAll();
 
-                if (!products.Any())
-                    return NotFound("No hay productos registrados.");
+            var products = await _productService.GetAllAsync();
 
-                return Ok(products);
-            }
-            catch (DatabaseException ex)
-            {
-                return StatusCode(500, ex.Message);
-            }
-            catch (Exception)
-            {
-                return StatusCode(500, "Ocurrió un error inesperado.");
-            }
+            if (!products.Any())
+                return NotFound("No hay productos registrados.");
+
+            return Ok(products);
         }
-
 
 
         [HttpGet("{id}")]
-        public ActionResult<ProductResponse> GetById([FromRoute] Guid id)
+        public async Task<ActionResult<ProductResponse>> GetByIdAsync([FromRoute] Guid id)
         {
-            try
-            {
-                return Ok(_productService.GetById(id));
-            }
-            catch (NotFoundException ex)
-            {
-                return NotFound(ex.Message);
-            }
-            catch (DatabaseException ex)
-            {
-                return StatusCode(500, ex.Message);
-            }
-            catch (Exception)
-            {
-                return StatusCode(500, "Ocurrió un error inesperado.");
-            }
+            return Ok(await _productService.GetByIdAsync(id));
         }
 
 
 
+        [Authorize(Policy = Policies.SoloAdmin)]
         [HttpPost]
-        public ActionResult<ProductResponse> Create([FromBody] ProductRequest product)
+        public async Task<ActionResult<ProductResponse>> CreateAsync([FromBody] ProductRequest product)
         {
-            try
-            {
-                var createdProduct = _productService.Create(product);
-                return CreatedAtAction(nameof(GetById), new { id = createdProduct.Id }, createdProduct);
-            }
-            catch (DatabaseException ex)
-            {
-                return StatusCode(500, ex.Message);
-            }
-            catch (Exception)
-            {
-                return StatusCode(500, "Ocurrió un error inesperado.");
-            }
+            var createdProduct = await _productService.CreateAsync(product);
+            return CreatedAtAction(nameof(GetByIdAsync), new { id = createdProduct.Id }, createdProduct);
         }
 
 
 
 
 
+        [Authorize(Policy = Policies.SoloAdmin)]
         [HttpDelete("{id}")]
-        public ActionResult Delete([FromRoute] Guid id) 
+        public async Task<ActionResult> DeleteAsync([FromRoute] Guid id)
         {
-            try
-            {
-                _productService.Delete(id);
-                return NoContent();
-            }
-            catch (NotFoundException ex)
-            {
-                return NotFound(ex.Message);
-            }
-            catch (DatabaseException ex)
-            {
-                return StatusCode(500, ex.Message);
-            }
-            catch (Exception)
-            {
-                return StatusCode(500, "Ocurrió un error inesperado.");
-            }
+            await _productService.DeleteAsync(id);
+            return NoContent();
         }
 
-
+        [Authorize(Policy = Policies.SoloAdmin)]
         [HttpPut("{id}")]
-        public ActionResult Update([FromBody] ProductRequest product, [FromRoute] Guid id)
-        
+        public async Task<ActionResult> UpdateAsync([FromBody] ProductRequest product, [FromRoute] Guid id)
         {
-            try
-            {
-                _productService.Update(product, id);
-                return NoContent();
-            }
-            catch (NotFoundException ex)
-            {
-                return NotFound(ex.Message);
-            }
-            catch (DatabaseException ex)
-            {
-                return StatusCode(500, ex.Message);
-            }
-            catch (Exception)
-            {
-                return StatusCode(500, "Ocurrió un error inesperado.");
-            }
+            await _productService.UpdateAsync(product, id);
+            return NoContent();
         }
 
 
