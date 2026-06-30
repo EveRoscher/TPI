@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TPI.Infraestructure.Persistance;
 
@@ -11,9 +12,11 @@ using TPI.Infraestructure.Persistance;
 namespace TPI.Infraestructure.Persistance.Migrations
 {
     [DbContext(typeof(TPIDbContext))]
-    partial class TPIDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260630024606_AddStockToProduct")]
+    partial class AddStockToProduct
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -147,8 +150,7 @@ namespace TPI.Infraestructure.Persistance.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("OrderId")
-                        .IsUnique()
-                        .HasFilter("[IsDeleted] = 0");
+                        .IsUnique();
 
                     b.ToTable("Payments");
                 });

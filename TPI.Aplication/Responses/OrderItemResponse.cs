@@ -9,5 +9,7 @@ namespace TPI.Aplication.Responses
         public decimal Subtotal => UnitPrice * Quantity;
         public Guid OrderId { get; set; }
         public Guid ProductId { get; set; }
+        public int? RemainingStock { get; set; }
+        public decimal? OrderTotal { get; set; }
     }
 }

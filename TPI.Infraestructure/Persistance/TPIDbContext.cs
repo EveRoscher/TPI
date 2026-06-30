@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using TPI.Domain.Entities;
 
 namespace TPI.Infraestructure.Persistance
@@ -59,6 +59,11 @@ namespace TPI.Infraestructure.Persistance
                 .WithOne(o => o.Payment)
                 .HasForeignKey<Payment>(p => p.OrderId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Payment>()
+                .HasIndex(p => p.OrderId)
+                .IsUnique()
+                .HasFilter("[IsDeleted] = 0");
 
             modelBuilder.Entity<Payment>()
                 .Property(p => p.Amount)

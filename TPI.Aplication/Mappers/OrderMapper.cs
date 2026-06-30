@@ -1,3 +1,4 @@
+using System.Linq;
 using TPI.Aplication.Requests;
 using TPI.Aplication.Responses;
 using TPI.Domain.Entities;
@@ -18,6 +19,22 @@ namespace TPI.Aplication.Mappers
                 CreatedAt = order.CreatedAt,
                 ConfirmedAt = order.ConfirmedAt,
                 UserId = order.UserId
+            };
+        }
+
+        public static OrderInfoResponse ToOrderInfoResponse(this Order order)
+        {
+            return new OrderInfoResponse
+            {
+                Id = order.Id,
+                Status = order.Status.ToString(),
+                TotalAmount = order.OrderItems != null && order.OrderItems.Any() ? order.OrderItems.Sum(x => x.UnitPrice * x.Quantity) : order.TotalAmount,
+                PickupETA = order.PickupETA,
+                PickupDay = order.PickupDay,
+                CreatedAt = order.CreatedAt,
+                ConfirmedAt = order.ConfirmedAt,
+                UserId = order.UserId,
+                Items = order.OrderItems?.Select(x => x.ToOrderItemResponse()).ToList() ?? new List<OrderItemResponse>()
             };
         }
 

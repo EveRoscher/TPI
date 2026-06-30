@@ -2,12 +2,12 @@
 {
     public enum OrderStatus
     {
-        Created,
-        AwaitingPayment,
-        Paid,
-        Canceled,
-        Ready,
-        Delivered
+        Created,            //0
+        AwaitingPayment,    //1
+        Paid,               //2
+        Canceled,           //3
+        Ready,              //4
+        Delivered           //5
     }
 
     public class Order : BaseEntity

@@ -1,15 +1,16 @@
-﻿namespace TPI.Domain.Entities
+namespace TPI.Domain.Entities
 {
     public enum PaymentMethod
     {
-        BankTransfer
+        BankTransfer,   // 0
+        Cash            // 1
     }
 
     public enum PaymentStatus
     {
-        PendingReview,
-        Accepted,
-        Rejected
+        PendingReview, // 0
+        Accepted,      // 1
+        Rejected       // 2
     }
 
     public class Payment : BaseEntity
