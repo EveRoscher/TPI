@@ -29,10 +29,12 @@ jobs:
           dotnet-version: '10.x'
 
       - name: Restore dependencias
-        run: dotnet restore TPI.slnx
+        run: |
+          dotnet restore TPI.slnx
+          dotnet restore TPI.Infraestructure/TPI.Infraestructure.csproj
 
       - name: Build application
-        run: dotnet build TPI.slnx --configuration Release 
+        run: dotnet build TPI.slnx --configuration Release --no-restore
 
       - name: Test
         run: dotnet test --no-build --configuration Release --verbosity normal
