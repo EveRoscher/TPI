@@ -88,6 +88,12 @@ jobs:
       - name: Install dotnet-ef tool
         run: dotnet tool install --global dotnet-ef --version 10.*
 
+      - name: Restore dependencias
+        run: |
+          dotnet restore TPI.slnx
+          dotnet restore TPI.Infraestructure/TPI.Infraestructure.csproj
+          dotnet restore TPI.Presentation/TPI.Presentation.csproj
+
       - name: Update database with EF Core migrations
         run: dotnet ef database update --project TPI.Infraestructure/TPI.Infraestructure.csproj --startup-project TPI.Presentation/TPI.Presentation.csproj
         env:
@@ -99,4 +105,3 @@ jobs:
         with:
           app-name: '2tup6-tpi-coffeeapi'
           package: ./myapp
-
