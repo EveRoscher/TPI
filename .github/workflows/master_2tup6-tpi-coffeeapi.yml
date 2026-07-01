@@ -30,7 +30,8 @@ jobs:
 
       - name: Restore dependencias
         run: |
-          dotnet restore TPI.sln
+         # dotnet restore TPI.sln
+          dotnet restore TPI.slnx
           dotnet restore TPI.Infraestructure/TPI.Infraestructure.csproj
           dotnet restore TPI.Presentation/TPI.Presentation.csproj
 
