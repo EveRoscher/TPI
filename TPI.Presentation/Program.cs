@@ -15,7 +15,10 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
+builder.Services.AddControllers(options =>
+{
+    options.SuppressAsyncSuffixInActionNames = false;
+});
 builder.Services.AddOpenApi();
 builder.Services.AddSwaggerGen(options =>
 {
@@ -33,6 +36,10 @@ builder.Services.AddSwaggerGen(options =>
     {
         { new OpenApiSecuritySchemeReference("Bearer", document), [] }
     });
+
+    var xmlFile = $"{System.Reflection.Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    var xmlPath = System.IO.Path.Combine(AppContext.BaseDirectory, xmlFile);
+    options.IncludeXmlComments(xmlPath);
 });
 
 builder.Services.AddDbContext<TPIDbContext>(
@@ -48,6 +55,7 @@ builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 
 
 //AGREGAR SERVICIO EXTERNO
+builder.Services.AddHttpClient<IDolarService, DolarService>();
 
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IUserService, UserService>();

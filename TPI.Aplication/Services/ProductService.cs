@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using TPI.Aplication.Abstractions;
@@ -68,6 +68,7 @@ namespace TPI.Aplication.Services
             productToUpdate.Description = product.Description;
             productToUpdate.Price = product.Price;
             productToUpdate.IsActive = product.IsActive;
+            productToUpdate.Stock = product.Stock;
             productToUpdate.ImageUrl = product.ImageUrl;
             productToUpdate.ProductCategoryId = product.ProductCategoryId;
 

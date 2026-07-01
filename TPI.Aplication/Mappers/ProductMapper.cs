@@ -1,4 +1,4 @@
-﻿using TPI.Aplication.Requests;
+using TPI.Aplication.Requests;
 using TPI.Aplication.Responses;
 using TPI.Domain.Entities;
 
@@ -15,6 +15,7 @@ namespace TPI.Aplication.Mappers
                 Description = product.Description,
                 Price = product.Price,
                 IsActive = product.IsActive,
+                Stock = product.Stock,
                 ImageUrl = product.ImageUrl,
                 ProductCategoryId = product.ProductCategoryId
             };
@@ -29,6 +30,7 @@ namespace TPI.Aplication.Mappers
                 Description = productRequest.Description,
                 Price = productRequest.Price,
                 IsActive = productRequest.IsActive,
+                Stock = productRequest.Stock,
                 ImageUrl = productRequest.ImageUrl,
                 ProductCategoryId = productRequest.ProductCategoryId,
                 CreatedAt = DateTime.UtcNow,

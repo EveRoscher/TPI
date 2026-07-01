@@ -1,4 +1,4 @@
-﻿using TPI.Aplication.Abstractions;
+using TPI.Aplication.Abstractions;
 using TPI.Aplication.Requests;
 using TPI.Aplication.Responses;
 using Microsoft.AspNetCore.Authorization;
@@ -18,6 +18,10 @@ namespace TPI.Presentation.Controllers
             _authService = authService;
         }
 
+        /// <summary>
+        /// Registra a un nuevo usuario (Cliente) en el sistema.
+        /// </summary>
+        /// <param name="request">Datos del registro (nombre, email, contraseña).</param>
         [HttpPost("signup")]
         [AllowAnonymous]
         public ActionResult<AuthResponse> SignUp([FromBody] SignUpRequest request)
@@ -26,6 +30,10 @@ namespace TPI.Presentation.Controllers
             return StatusCode(StatusCodes.Status201Created, response);
         }
 
+        /// <summary>
+        /// Inicia sesión y devuelve el token JWT del usuario registrado.
+        /// </summary>
+        /// <param name="request">Credenciales del usuario (email y contraseña).</param>
         [HttpPost("signin")]
         [AllowAnonymous]
         public ActionResult<AuthResponse> SignIn([FromBody] SignInRequest request)

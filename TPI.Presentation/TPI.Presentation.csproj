@@ -1,10 +1,12 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>23eca980-5d09-4c63-bf5c-cc679b045625</UserSecretsId>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);1591</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
@@ -18,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Infraestructure\TPI.Infraestructure.csproj" />
+    <ProjectReference Include="..\TPI.Infraestructure\TPI.Infraestructure.csproj" />
     <ProjectReference Include="..\TPI.Aplication\TPI.Aplication.csproj" />
   </ItemGroup>
 

@@ -15,7 +15,9 @@ namespace TPI.Aplication.Mappers
                 UnitPrice = orderItem.UnitPrice,
                 Quantity = orderItem.Quantity,
                 OrderId = orderItem.OrderId,
-                ProductId = orderItem.ProductId
+                ProductId = orderItem.ProductId,
+                RemainingStock = orderItem.Product != null ? orderItem.Product.Stock : null,
+                OrderTotal = orderItem.Order != null ? orderItem.Order.TotalAmount : null
             };
         }
 

@@ -1,4 +1,4 @@
-﻿namespace TPI.Aplication.Responses
+namespace TPI.Aplication.Responses
 {
     public class ProductResponse
     {
@@ -7,6 +7,7 @@
         public string Description { get; set; } = string.Empty;
         public decimal Price { get; set; }
         public bool IsActive { get; set; }
+        public int Stock { get; set; }
         public string? ImageUrl { get; set; }
         public Guid ProductCategoryId { get; set; }
     }

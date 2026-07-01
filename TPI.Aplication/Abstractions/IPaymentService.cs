@@ -1,4 +1,4 @@
-﻿using TPI.Aplication.Requests;
+using TPI.Aplication.Requests;
 using TPI.Aplication.Responses;
 
 namespace TPI.Aplication.Abstractions
@@ -10,5 +10,8 @@ namespace TPI.Aplication.Abstractions
         Task<PaymentResponse> CreateAsync(PaymentRequest payment);
         Task UpdateAsync(PaymentRequest payment, Guid id);
         Task DeleteAsync(Guid id);
+        Task AcceptPaymentAsync(Guid id);
+        Task RejectPaymentAsync(Guid id);
+        Task<List<PaymentResponse>> GetRejectedPaymentsAsync();
     }
 }
