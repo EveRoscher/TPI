@@ -83,7 +83,7 @@ jobs:
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_E92B44B4733544F386279090C217C5AE }}
             
       - name: Set DB connection string in Azure Web App settings
-        run: az webapp config appsettings set --resource-group "${{ secrets.AZURE_RESOURCE_GROUP }}" --name "2tup6-tpi-coffeeapi" --settings 'ConnectionStrings__DBConnectionString=${{ secrets.DBCONNECTIONSTRING }}'
+        run: az webapp config appsettings set --resource-group "${{ secrets.AZURE_RESOURCE_GROUP }}" --name "2tup6-tpi-coffeeapi" --settings 'ConnectionStrings__TPIConnectionString=${{ secrets.DBCONNECTIONSTRING }}'
 
       - name: Install dotnet-ef tool
         run: dotnet tool install --global dotnet-ef --version 10.*
@@ -95,9 +95,9 @@ jobs:
           dotnet restore TPI.Presentation/TPI.Presentation.csproj
 
       - name: Update database with EF Core migrations
-        run: dotnet ef database update --project TPI.Infraestructure/TPI.Infraestructure.csproj --startup-project TPI.Presentation/TPI.Presentation.csproj
+        run: dotnet ef database update --project TPI.Infraestructure/TPI.Infraestructure.csproj --startup-project TPI.Presentation/TPI.Presentation.csproj --connection "${{ secrets.DBCONNECTIONSTRING }}"
         env:
-          ConnectionStrings__DBConnectionString: ${{ secrets.DBCONNECTIONSTRING }}
+          ConnectionStrings__TPIConnectionString: ${{ secrets.DBCONNECTIONSTRING }}
           
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
