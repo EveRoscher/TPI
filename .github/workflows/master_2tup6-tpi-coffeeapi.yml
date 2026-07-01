@@ -29,16 +29,16 @@ jobs:
           dotnet-version: '10.x'
 
       - name: Restore dependencias
-        run: dotnet restore TPI/TPI.csproj
+        run: dotnet restore TPI.slnx
 
       - name: Build application
-        run: dotnet build TPI.sln --configuration Release 
+        run: dotnet build TPI.slnx --configuration Release 
 
       - name: Test
         run: dotnet test --no-build --configuration Release --verbosity normal
         
       - name: Publish
-        run: dotnet publish TPI/TPI.csproj -c Release -o ./myapp
+        run: dotnet publish TPI.Presentation/TPI.Presentation.csproj -c Release -o ./myapp
 
       - name: Upload artifact 
         uses: actions/upload-artifact@v4
@@ -82,10 +82,10 @@ jobs:
         run: az webapp config appsettings set --resource-group "${{ secrets.AZURE_RESOURCE_GROUP }}" --name "2tup6-tpi-coffeeapi" --settings 'ConnectionStrings__DBConnectionString=${{ secrets.DBCONNECTIONSTRING }}'
 
       - name: Install dotnet-ef tool
-        run: dotnet tool install --global dotnet-ef --version 8.*
-       
+        run: dotnet tool install --global dotnet-ef --version 10.*
+
       - name: Update database with EF Core migrations
-        run: dotnet ef database update --project TPI/TPI.csproj --startup-project TPI/TPI.csproj
+        run: dotnet ef database update --project TPI.Infraestructure/TPI.Infraestructure.csproj --startup-project TPI.Presentation/TPI.Presentation.csproj
         env:
           ConnectionStrings__DBConnectionString: ${{ secrets.DBCONNECTIONSTRING }}
           
