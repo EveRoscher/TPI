@@ -29,7 +29,7 @@ jobs:
           dotnet-version: '10.x'
 
       - name: Restore dependencias
-        run: dotnet restore
+        run: dotnet restore TPI/TPI.csproj
 
       - name: Build application
         run: dotnet build TPI.sln --configuration Release 
