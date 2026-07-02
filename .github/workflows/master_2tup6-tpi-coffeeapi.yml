@@ -87,8 +87,8 @@ jobs:
         run: az webapp config appsettings set --resource-group $env:AZURE_RG --name "2tup6-tpi-coffeeapi" --settings "ConnectionStrings__TPIConnectionString=$env:DB_CONN"
         env:
           AZURE_RG: ${{ secrets.AZURE_RESOURCE_GROUP }}
-          DB_CONN: ${{ secrets.DBCONNECTIONSTRING }}
-
+          DB_CONN: ${{ secrets.TPICONNECTIONSTRING }}
+          #CORRECCION DB - TPI 
       - name: Install dotnet-ef tool
         run: dotnet tool install --global dotnet-ef --version 10.*
 
@@ -101,8 +101,8 @@ jobs:
       - name: Update database with EF Core migrations
         run: dotnet ef database update --project TPI.Infraestructure/TPI.Infraestructure.csproj --startup-project TPI.Presentation/TPI.Presentation.csproj --connection $env:DB_CONN
         env:
-          DB_CONN: ${{ secrets.DBCONNECTIONSTRING }}
-          
+          DB_CONN: ${{ secrets.TPICONNECTIONSTRING }}
+          #CORRECCION DB - TPI 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
